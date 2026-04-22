@@ -45,36 +45,14 @@ jobs:
           FTP_USER_ESCAPED=$(printf '%s' "$FTP_USER" | sed 's/\\/\\\\/g; s/"/\\"/g')
           FTP_PASS_ESCAPED=$(printf '%s' "$FTP_PASS" | sed 's/\\/\\\\/g; s/"/\\"/g')
 
-          {
-            echo 'set ftp:ssl-allow no'
-            echo 'set ssl:verify-certificate no'
-            echo 'set net:max-retries 2'
-            echo 'set net:timeout 20'
-            echo 'set xfer:clobber on'
-            echo 'open "'"$FTP_HOST"'"'
-            echo 'user "'"$FTP_USER_ESCAPED"'" "'"$FTP_PASS_ESCAPED"'"'
-            echo 'rm -r "Web"'
-
-            find dist -type d | while read -r dir; do
-              remote_dir="${dir#dist}"
-              remote_dir="${remote_dir#/}"
-
-              if [ -n "$remote_dir" ]; then
-                echo 'mkdir -p "'"$remote_dir"'"'
-              fi
-            done
-
-            find dist -type f | while read -r file; do
-              remote_dir=$(dirname "${file#dist/}")
-
-              if [ "$remote_dir" = "." ]; then
-                echo 'put "'"$file"'" -o "'"$(basename "$file")"'"'
-              else
-                echo 'put "'"$file"'" -o "'"$remote_dir/$(basename "$file")"'"'
-              fi
-            done
-
-            echo 'bye'
-          } > deploy.lftp
-
-          lftp -f deploy.lftp
+          lftp -c "
+            set ftp:ssl-allow no
+            set ssl:verify-certificate no
+            set net:max-retries 2
+            set net:timeout 20
+            set xfer:clobber on
+            open $FTP_HOST
+            user $FTP_USER_ESCAPED $FTP_PASS_ESCAPED
+            mirror --reverse --verbose --no-perms --parallel=4 dist/ ./
+            bye
+          "
