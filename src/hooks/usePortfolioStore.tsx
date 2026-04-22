@@ -38,6 +38,20 @@ type PortfolioContextValue = {
 
 const PortfolioContext = createContext<PortfolioContextValue | null>(null)
 
+const createId = () => {
+  if (typeof globalThis.crypto?.randomUUID === 'function') {
+    return globalThis.crypto.randomUUID()
+  }
+
+  if (typeof globalThis.crypto?.getRandomValues === 'function') {
+    const bytes = new Uint8Array(16)
+    globalThis.crypto.getRandomValues(bytes)
+    return Array.from(bytes, (byte) => byte.toString(16).padStart(2, '0')).join('')
+  }
+
+  return `id-${Date.now()}-${Math.random().toString(16).slice(2)}`
+}
+
 const normalizeCategory = (category: string): PortfolioCategory => {
   const normalized = category
     .normalize('NFD')
@@ -234,7 +248,7 @@ export const PortfolioProvider = ({ children }: PropsWithChildren) => {
         try {
           const images = await Promise.all(acceptedFiles.map(optimizeImageForStorage))
           const created = images.map<PortfolioItem>((image, index) => ({
-            id: crypto.randomUUID(),
+            id: createId(),
             category,
             title: acceptedFiles[index].name.replace(/\.[^.]+$/, ''),
             image,
@@ -266,7 +280,7 @@ export const PortfolioProvider = ({ children }: PropsWithChildren) => {
         try {
           const images = await Promise.all(acceptedFiles.map(optimizeImageForStorage))
           const created = images.map<HeroSlide>((image, index) => ({
-            id: crypto.randomUUID(),
+            id: createId(),
             title: acceptedFiles[index].name.replace(/\.[^.]+$/, ''),
             image,
             createdAt: new Date().toISOString(),
