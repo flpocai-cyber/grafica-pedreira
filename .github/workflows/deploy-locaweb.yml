@@ -47,14 +47,13 @@ jobs:
             echo 'set xfer:clobber on'
             echo 'open "'"$FTP_HOST"'"'
             echo 'user "'"$FTP_USER_ESCAPED"'" "'"$FTP_PASS_ESCAPED"'"'
-            echo 'mkdir -p "Web"'
 
             find dist -type d | while read -r dir; do
               remote_dir="${dir#dist}"
               remote_dir="${remote_dir#/}"
 
               if [ -n "$remote_dir" ]; then
-                echo 'mkdir -p "'"Web/$remote_dir"'"'
+                echo 'mkdir -p "'"$remote_dir"'"'
               fi
             done
 
@@ -62,9 +61,9 @@ jobs:
               remote_dir=$(dirname "${file#dist/}")
 
               if [ "$remote_dir" = "." ]; then
-                echo 'put "'"$file"'" -o "'"Web/$(basename "$file")"'"'
+                echo 'put "'"$file"'" -o "'"/$(basename "$file")"'"'
               else
-                echo 'put "'"$file"'" -o "'"Web/$remote_dir/$(basename "$file")"'"'
+                echo 'put "'"$file"'" -o "'"$remote_dir/$(basename "$file")"'"'
               fi
             done
 
