@@ -45,9 +45,11 @@ jobs:
           set net:max-retries 2
           set net:timeout 20
           set xfer:clobber on
+          set ftp:use-site-chmod no
+          set ftp:use-mdtm no
           open "$FTP_HOST"
           user "$FTP_USER_ESCAPED" "$FTP_PASS_ESCAPED"
-          mirror -R --delete --verbose dist .
+          mirror -R --verbose dist .
           bye
           EOF
           lftp -f deploy.lftp
