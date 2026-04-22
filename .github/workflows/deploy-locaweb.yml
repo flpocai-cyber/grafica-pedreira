@@ -28,7 +28,10 @@ jobs:
         run: npm run build
 
       - name: Prepare IIS default document fallback
-        run: cp dist/index.html dist/default.htm
+        run: |
+          cp dist/index.html dist/default.htm
+          cp public/web.config dist/web.config
+          test -f dist/web.config
 
       - name: Install lftp
         run: sudo apt-get update && sudo apt-get install -y lftp
@@ -51,7 +54,7 @@ jobs:
             echo 'open "'"$FTP_HOST"'"'
             echo 'user "'"$FTP_USER_ESCAPED"'" "'"$FTP_PASS_ESCAPED"'"'
             echo 'rm -r "Web"'
-            echo 'rm "web.config"'
+            echo 'put "dist/web.config" -o "web.config"'
 
             find dist -type d | while read -r dir; do
               remote_dir="${dir#dist}"
