@@ -34,5 +34,5 @@ jobs:
           user: ${{ secrets.USER }}
           password: ${{ secrets.PASS }}
           localDir: dist
-          remoteDir: public_html
+          remoteDir: web
           forceSsl: true
