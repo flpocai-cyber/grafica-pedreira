@@ -47,6 +47,7 @@ jobs:
             echo 'set xfer:clobber on'
             echo 'open "'"$FTP_HOST"'"'
             echo 'user "'"$FTP_USER_ESCAPED"'" "'"$FTP_PASS_ESCAPED"'"'
+            echo 'rm -r "Web"'
 
             find dist -type d | while read -r dir; do
               remote_dir="${dir#dist}"
