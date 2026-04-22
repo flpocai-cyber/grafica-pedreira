@@ -36,13 +36,12 @@ jobs:
           FTP_USER: ${{ secrets.USER }}
           FTP_PASS: ${{ secrets.PASS }}
         run: |
-          lftp -e "
+          lftp "$FTP_HOST" -u "$FTP_USER","$FTP_PASS" -e "
           set ftp:ssl-allow no;
           set ssl:verify-certificate no;
           set net:max-retries 2;
           set net:timeout 20;
           set xfer:clobber on;
-          open -u $FTP_USER,$FTP_PASS $FTP_HOST;
           mirror -R --delete --verbose dist .;
           bye
           "
