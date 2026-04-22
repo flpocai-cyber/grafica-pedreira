@@ -36,6 +36,9 @@ jobs:
           FTP_USER: ${{ secrets.USER }}
           FTP_PASS: ${{ secrets.PASS }}
         run: |
+          FTP_USER_ESCAPED=$(printf '%s' "$FTP_USER" | sed 's/\\/\\\\/g; s/"/\\"/g')
+          FTP_PASS_ESCAPED=$(printf '%s' "$FTP_PASS" | sed 's/\\/\\\\/g; s/"/\\"/g')
+
           cat > deploy.lftp <<EOF
           set ftp:ssl-allow no
           set ssl:verify-certificate no
@@ -43,7 +46,7 @@ jobs:
           set net:timeout 20
           set xfer:clobber on
           open "$FTP_HOST"
-          user "$FTP_USER" "$FTP_PASS"
+          user "$FTP_USER_ESCAPED" "$FTP_PASS_ESCAPED"
           mirror -R --delete --verbose dist .
           bye
           EOF
