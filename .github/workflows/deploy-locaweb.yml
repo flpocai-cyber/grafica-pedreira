@@ -27,12 +27,22 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: FTP Deploy Locaweb
-        uses: locaweb/ftp-deploy@1.0.0
-        with:
-          host: ${{ secrets.HOST }}
-          user: ${{ secrets.USER }}
-          password: ${{ secrets.PASS }}
-          localDir: dist
-          remoteDir: .
-          forceSsl: false
+      - name: Install lftp
+        run: sudo apt-get update && sudo apt-get install -y lftp
+
+      - name: Deploy to Locaweb FTP
+        env:
+          FTP_HOST: ${{ secrets.HOST }}
+          FTP_USER: ${{ secrets.USER }}
+          FTP_PASS: ${{ secrets.PASS }}
+        run: |
+          lftp -e "
+          set ftp:ssl-allow no;
+          set ssl:verify-certificate no;
+          set net:max-retries 2;
+          set net:timeout 20;
+          set xfer:clobber on;
+          open -u $FTP_USER,$FTP_PASS $FTP_HOST;
+          mirror -R --delete --verbose dist .;
+          bye
+          "
