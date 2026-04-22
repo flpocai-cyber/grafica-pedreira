@@ -36,12 +36,15 @@ jobs:
           FTP_USER: ${{ secrets.USER }}
           FTP_PASS: ${{ secrets.PASS }}
         run: |
-          lftp "$FTP_HOST" -u "$FTP_USER","$FTP_PASS" -e "
-          set ftp:ssl-allow no;
-          set ssl:verify-certificate no;
-          set net:max-retries 2;
-          set net:timeout 20;
-          set xfer:clobber on;
-          mirror -R --delete --verbose dist .;
+          cat > deploy.lftp <<EOF
+          set ftp:ssl-allow no
+          set ssl:verify-certificate no
+          set net:max-retries 2
+          set net:timeout 20
+          set xfer:clobber on
+          open "$FTP_HOST"
+          user "$FTP_USER" "$FTP_PASS"
+          mirror -R --delete --verbose dist .
           bye
-          "
+          EOF
+          lftp -f deploy.lftp
