@@ -9,7 +9,7 @@ import {
 import { buildSeedPortfolio } from '../data/portfolioSeed'
 import { categoryList, type HeroSlide, type PortfolioCategory, type PortfolioItem } from '../types/portfolio'
 
-const STORAGE_KEY = 'grafica-pedreira-portfolio-v1'
+const STORAGE_KEY = 'grafica-pedreira-portfolio-v2'
 const CATEGORY_LIMIT = 20
 const MAX_IMAGE_SIZE = 1800
 const IMAGE_QUALITY = 0.82
