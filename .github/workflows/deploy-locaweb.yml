@@ -58,12 +58,10 @@ jobs:
             user $FTP_USER_ESCAPED $FTP_PASS_ESCAPED
             echo '=== Pasta raiz FTP ==='
             pwd
-            ls -la
-            echo '=== Removendo pasta Web/Web incorreta se existir ==='
-            rm -rf Web/Web 2>/dev/null || true
-            echo '=== Subindo arquivos para Web/ ==='
-            mirror --reverse --verbose --no-perms --parallel=4 --delete dist/ Web/
-            echo '=== Deploy concluído! Conteúdo final de Web/ ==='
-            ls Web/
+            echo '=== Subindo arquivos para ./ ==='
+            mirror --reverse --verbose --no-perms --parallel=4 --delete dist/ ./
+            echo '=== Deploy concluído! Conteúdo final de ./ ==='
+            ls -la ./
             bye
           "
+
