@@ -56,11 +56,14 @@ jobs:
             set xfer:clobber on
             open $FTP_HOST
             user $FTP_USER_ESCAPED $FTP_PASS_ESCAPED
-            echo 'Pasta remota atual:'
+            echo '=== Pasta raiz FTP ==='
             pwd
-            echo 'Listando pasta remota:'
-            ls
-            mirror --reverse --verbose --no-perms --parallel=4 --delete dist/ ./
-            echo 'Deploy concluído!'
+            ls -la
+            echo '=== Removendo pasta Web/Web incorreta se existir ==='
+            rm -rf Web/Web 2>/dev/null || true
+            echo '=== Subindo arquivos para Web/ ==='
+            mirror --reverse --verbose --no-perms --parallel=4 --delete dist/ Web/
+            echo '=== Deploy concluído! Conteúdo final de Web/ ==='
+            ls Web/
             bye
           "
