@@ -58,10 +58,10 @@ jobs:
             user $FTP_USER_ESCAPED $FTP_PASS_ESCAPED
             echo '=== Pasta raiz FTP ==='
             pwd
-            echo '=== Subindo arquivos para Web/Web/ ==='
-            mirror --reverse --verbose --no-perms --parallel=4 dist/ Web/Web/
-            echo '=== Deploy concluído! Conteúdo final de Web/Web/ ==='
-            ls -la Web/Web/
+            echo '=== Subindo arquivos para Web/ ==='
+            mirror --reverse --verbose --no-perms --parallel=4 dist/ Web/
+            echo '=== Deploy concluído! Conteúdo final de Web/ ==='
+            ls -la Web/
             bye
           "
 
