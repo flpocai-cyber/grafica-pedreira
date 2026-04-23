@@ -27,11 +27,14 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Prepare IIS default document fallback
+      - name: Prepare IIS config files
         run: |
           cp dist/index.html dist/default.htm
           cp public/web.config dist/web.config
-          test -f dist/web.config
+          echo "=== Arquivos no dist/ ==="
+          ls -la dist/
+          echo "=== Conteúdo do web.config ==="
+          cat dist/web.config
 
       - name: Install lftp
         run: sudo apt-get update && sudo apt-get install -y lftp
@@ -48,11 +51,16 @@ jobs:
           lftp -c "
             set ftp:ssl-allow no
             set ssl:verify-certificate no
-            set net:max-retries 2
-            set net:timeout 20
+            set net:max-retries 3
+            set net:timeout 30
             set xfer:clobber on
             open $FTP_HOST
             user $FTP_USER_ESCAPED $FTP_PASS_ESCAPED
-            mirror --reverse --verbose --no-perms --parallel=4 dist/ ./
+            echo 'Pasta remota atual:'
+            pwd
+            echo 'Listando pasta remota:'
+            ls
+            mirror --reverse --verbose --no-perms --parallel=4 --delete dist/ ./
+            echo 'Deploy concluído!'
             bye
           "
