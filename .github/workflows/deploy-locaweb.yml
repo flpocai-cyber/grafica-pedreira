@@ -53,6 +53,6 @@ jobs:
             set xfer:clobber on
             open $FTP_HOST
             user $FTP_USER_ESCAPED $FTP_PASS_ESCAPED
-            mirror --reverse --verbose --no-perms --parallel=4 dist/ Web/
+            mirror --reverse --verbose --no-perms --parallel=4 dist/ ./
             bye
           "
