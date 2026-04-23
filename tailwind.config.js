@@ -15,7 +15,7 @@ export default {
       },
       fontFamily: {
         sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-        display: ['"Cormorant Garamond"', 'serif'],
+        display: ['"Montserrat"', 'sans-serif'],
         montserrat: ['"Montserrat"', 'sans-serif'],
       },
       boxShadow: {
